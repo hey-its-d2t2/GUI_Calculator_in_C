@@ -1,0 +1,766 @@
+/*=================================*/
+//         A C Program For         //
+//         Basic Calculator 	   //
+//            27/10/2020           //
+//             d..$!ng#		   //
+/*=================================*/
+#include<stdio.h>
+#include<conio.h>
+#include<graphics.h>
+#include<dos.h>
+union REGS i,o,in,out;
+int x,y;
+//Functions
+void outline(),button(),screen();
+void button_mouse(),exit_screen();
+void restrict_mouse();
+void add(),sub(),mul(),div();
+int f_in=0,s_in=0,res=0;
+int xp=160,yp=53;
+/* Mouse */
+int initialize_mouse()
+{
+    i.x.ax=0;
+    int86(0x33,&i,&o);
+    return 0;
+}
+int show_mouse()
+{
+    i.x.ax=1;
+    int86(0x33,&i,&o);
+    return 0;
+}
+int get_mouse()
+{
+    i.x.ax=3;
+    int86(0x33,&i,&o);
+    return 0;
+}
+void restrict_mouse()
+{
+	in.x.ax=7;
+	in.x.cx=151;
+	in.x.dx=500;
+	int86(0x33,&in,&out);
+	in.x.ax=8;
+	in.x.cx=163;
+	in.x.dx=430;
+	int86(0x33,&in,&out);
+}
+void main()
+{
+	int gd=DETECT,gm;
+	initgraph(&gd,&gm,"c:\\turboc3\\bgi");
+	outline();
+	closegraph();
+}
+void outline()
+{
+	 setfillstyle(1,8);
+	 bar(146,46,504,434);
+	 setcolor(15);
+	 setlinestyle(0,0,2);
+	 rectangle(150,50,500,430);
+	 setcolor(3);
+	 setlinestyle(0,0,1);
+	 line(151,163,499,163);
+	 line(151,160,499,160);
+	 screen();
+}
+void screen()
+{
+	//Input
+	setcolor(15);
+	setfillstyle(1,15);
+	bar(153,53,497,110);
+	//Output
+	setfillstyle(1,15);
+	bar(153,113,497,157);
+	button();
+}
+void button()
+{
+	//7
+	setcolor(11);
+	ellipse(195,195,0,360,40,20);
+	setfillstyle(1,7);
+	floodfill(195,195,11);
+	setcolor(9);
+	settextstyle(4,0,4);
+	outtextxy(186,175,"7");
+	outtextxy(187,175,"7");
+	//8
+	setcolor(11);
+	ellipse(285,195,0,360,40,20);
+	setfillstyle(1,7);
+	floodfill(285,195,11);
+	setcolor(9);
+	settextstyle(4,0,4);
+	outtextxy(275,175,"8");
+	outtextxy(275,175,"8");
+	//9
+	setcolor(11);
+	ellipse(375,195,0,360,40,20);
+	setfillstyle(1,7);
+	floodfill(375,195,11);
+	setcolor(9);
+	settextstyle(4,0,4);
+	outtextxy(366,175,"9");
+	outtextxy(366,175,"9");
+	//4
+	setcolor(11);
+	ellipse(195,250,0,360,40,20);
+	setfillstyle(1,7);
+	floodfill(195,250,11);
+	setcolor(9);
+	settextstyle(4,0,4);
+	outtextxy(187,227,"4");
+	outtextxy(187,227,"4");
+	//5
+	setcolor(11);
+	ellipse(285,250,0,360,40,20);
+	setfillstyle(1,7);
+	floodfill(285,250,11);
+	setcolor(9);
+	settextstyle(4,0,4);
+	outtextxy(278,227,"5");
+	outtextxy(278,227,"5");
+	//6
+	setcolor(11);
+	ellipse(375,250,0,360,40,20);
+	setfillstyle(1,7);
+	floodfill(375,250,11);
+	setcolor(9);
+	settextstyle(4,0,4);
+	outtextxy(368,227,"6");
+	outtextxy(368,227,"6");
+	//1
+	setcolor(11);
+	ellipse(195,305,0,360,40,20);
+	setfillstyle(1,7);
+	floodfill(195,305,11);
+	setcolor(9);
+	settextstyle(4,0,4);
+	outtextxy(188,283,"1");
+	outtextxy(188,283,"1");
+	//2
+	setcolor(11);
+	ellipse(285,305,0,360,40,20);
+	setfillstyle(1,7);
+	floodfill(285,305,11);
+	setcolor(9);
+	settextstyle(4,0,4);
+	outtextxy(280,283,"2");
+	outtextxy(280,283,"2");
+	//3
+	setcolor(11);
+	ellipse(375,305,0,360,40,20);
+	setfillstyle(1,7);
+	floodfill(375,305,11);
+	setcolor(9);
+	settextstyle(4,0,4);
+	outtextxy(367,283,"3");
+	outtextxy(367,283,"3");
+	//0
+	setcolor(11);
+	ellipse(240,355,0,360,40,20);
+	setfillstyle(1,7);
+	floodfill(240,355,11);
+	setcolor(9);
+	settextstyle(4,0,4);
+	outtextxy(232,331,"0");
+	outtextxy(232,331,"0");
+	//.
+	setcolor(11);
+	ellipse(335,355,0,360,40,20);
+	setfillstyle(1,7);
+	floodfill(335,355,11);
+	setcolor(9);
+	settextstyle(4,0,4);
+	outtextxy(333,325,".");
+	outtextxy(333,325,".");
+	//c
+	 setcolor(11);
+	rectangle(160,380,200,420);
+	setfillstyle(1,7);
+	floodfill(161,381,11);
+	setcolor(9);
+	settextstyle(1,0,4);
+	outtextxy(172,380,"C");
+	outtextxy(172,380,"C");
+	//Exit
+	setcolor(11);
+	rectangle(360,380,410,420);
+	setfillstyle(1,7);
+	floodfill(361,381,11);
+	setcolor(9);
+	settextstyle(1,0,1);
+	outtextxy(370,387,"Exit");
+	outtextxy(370,387,"Exit");
+	//Calculator
+	setfillstyle(1,4);
+	bar(202,390,359,410);
+	setcolor(15);
+	settextstyle(7,0,3);
+	outtextxy(225,384,"Calculator");
+	//Line
+	setcolor(14);
+	setlinestyle(0,0,1);
+	line(430,180,430,420);
+	// / (Divide)
+	setcolor(11);
+	rectangle(440,190,490,230);
+	setfillstyle(1,4);
+	floodfill(441,191,11);
+	setcolor(14);
+	settextstyle(7,0,3);
+	outtextxy(455,195,"/");
+	//* (Multiply)
+	setcolor(11);
+	rectangle(440,240,490,280);
+	setfillstyle(1,4);
+	floodfill(441,241,11);
+	setcolor(14);
+	settextstyle(7,0,3);
+	outtextxy(460,248,"*");
+	//-(Subtract);
+	setcolor(11);
+	rectangle(440,290,490,330);
+	setfillstyle(1,4);
+	floodfill(441,291,11);
+	setcolor(14);
+	settextstyle(7,0,3);
+	outtextxy(460,294,"-");
+	//+ (Add)
+	setcolor(11);
+	rectangle(440,340,490,380);
+	setfillstyle(1,4);
+	floodfill(441,341,11);
+	setcolor(14);
+	settextstyle(7,0,3);
+	outtextxy(460,343,"+");
+	//=
+	setcolor(11);
+	rectangle(440,390,490,420);
+	setfillstyle(1,4);
+	floodfill(441,391,11);
+	setcolor(14);
+	settextstyle(7,0,3);
+	outtextxy(460,389,"=");
+	button_mouse();
+}
+void button_mouse()
+{
+	xp=160;
+	initialize_mouse();
+	show_mouse();
+	while(1)
+	{
+		o.x.bx=0;
+		get_mouse();
+		restrict_mouse();
+	       if(o.x.bx==1&&o.x.cx<410&&o.x.cx>360&&o.x.dx<420&&o.x.dx>380)
+	       {
+			//Exit
+			sound(999);
+			setcolor(15);
+			rectangle(360,380,410,420);
+			setfillstyle(1,9);
+			floodfill(361,381,15);
+			setcolor(4);
+			settextstyle(1,0,1);
+			outtextxy(370,387,"Exit");
+			outtextxy(370,387,"Exit");
+			delay(250);
+			nosound();
+			cleardevice();
+			exit_screen();
+
+	       }
+	       if(o.x.bx==1&&o.x.cx<200&&o.x.cx>160&&o.x.dx<420&&o.x.dx>380)
+	       {
+			 //C
+			 sound(999);
+			 setcolor(15);
+			 rectangle(160,380,200,420);
+			 setfillstyle(1,9);
+			 floodfill(161,381,15);
+			 setcolor(4);
+			 settextstyle(1,0,4);
+			 outtextxy(172,380,"C");
+			 outtextxy(172,380,"C");
+			 delay(250);
+			 nosound();
+			 cleardevice();
+			 outline();
+			// exit();
+
+	       }
+	       if(o.x.bx==1&&o.x.cx<490&&o.x.cx>440&&o.x.dx<380&&o.x.dx>340)
+	       {
+			//+ (Add)
+			sound(999);
+			setcolor(15);
+			rectangle(440,340,490,380);
+			setfillstyle(1,9);
+			floodfill(441,341,15);
+			setcolor(4);
+			settextstyle(7,0,3);
+			outtextxy(460,343,"+");
+			delay(250);
+			nosound();
+			settextstyle(7,0,3);
+			outtextxy(xp+=1,54,"+");
+			xp+=14;
+	       }
+	       if(o.x.bx==1&&o.x.cx<490&&o.x.cx>440&&o.x.dx<330&&o.x.dx>290)
+	       {
+			  //- (Subtract)
+			  sound(999);
+			  setcolor(15);
+			  rectangle(440,290,490,330);
+			  setfillstyle(1,9);
+			  floodfill(441,291,15);
+			  setcolor(4);
+			  settextstyle(7,0,3);
+			  outtextxy(460,294,"-");
+			  delay(250);
+			  nosound();
+			  settextstyle(7,0,3);
+			  outtextxy(xp+=1,54,"-");
+			  xp+=14;
+	       }
+	       if(o.x.bx==1&&o.x.cx<490&&o.x.cx>440&&o.x.dx<280&&o.x.dx>240)
+	       {
+			//* (Multiply)
+			sound(999);
+			setcolor(15);
+			rectangle(440,240,490,280);
+			setfillstyle(1,9);
+			floodfill(441,241,15);
+			setcolor(4);
+			settextstyle(7,0,3);
+			outtextxy(460,248,"*");
+			delay(250);
+			nosound();
+			settextstyle(7,0,3);
+			outtextxy(xp+=1,54,"*");
+			xp+=14;
+	       }
+	       if(o.x.bx==1&&o.x.cx<490&&o.x.cx>440&&o.x.dx<230&&o.x.dx>190)
+	       {
+			// / (Divide)
+			sound(999);
+			setcolor(15);
+			rectangle(440,190,490,230);
+			setfillstyle(1,9);
+			floodfill(441,191,15);
+			setcolor(4);
+			settextstyle(7,0,3);
+			outtextxy(455,195,"/");
+			delay(250);
+			nosound();
+			settextstyle(7,0,3);
+			outtextxy(xp+=1,54,"/");
+			xp+=14;
+		}
+	       if(o.x.bx==1&&o.x.cx<490&&o.x.cx>440&&o.x.dx<420&&o.x.dx>390)
+	       {
+			// =
+			sound(999);
+			setcolor(15);
+			rectangle(440,390,490,420);
+			setfillstyle(1,9);
+			floodfill(441,391,15);
+			setcolor(4);
+			settextstyle(7,0,3);
+			outtextxy(460,389,"=");
+			delay(250);
+			nosound();
+			cleardevice();
+			outline();
+	       }
+	       if(o.x.bx==1&&o.x.cx<280&&o.x.cx>200&&o.x.dx<375&&o.x.dx>335)
+	       {
+			// 0
+			sound(999);
+		    //	rectangle(200,335,280,375);
+			setcolor(15);
+			ellipse(240,355,0,360,40,20);
+			setfillstyle(1,9);
+			floodfill(240,355,15);
+			setcolor(4);
+			settextstyle(4,0,4);
+			outtextxy(232,331,"0");
+			outtextxy(232,331,"0");
+			delay(250);
+			nosound();
+			settextstyle(7,0,3);
+			yp=53;
+			outtextxy(xp,53,"0");
+			xp+=13;
+			//
+			setcolor(11);
+			ellipse(240,355,0,360,40,20);
+			setfillstyle(1,7);
+			floodfill(240,355,11);
+			setcolor(9);
+			settextstyle(4,0,4);
+			outtextxy(232,331,"0");
+			outtextxy(232,331,"0");
+	       }
+	       if(o.x.bx==1&&o.x.cx<375&&o.x.cx>295&&o.x.dx<375&&o.x.dx>335)
+	       {
+			// .
+			sound(999);
+		       //	rectangle(295,335,375,375);
+			setcolor(15);
+			ellipse(335,355,0,360,40,20);
+			setfillstyle(1,9);
+			floodfill(335,355,15);
+			setcolor(4);
+			settextstyle(4,0,4);
+			outtextxy(333,325,".");
+			outtextxy(333,325,".");
+			delay(250);
+			nosound();
+			settextstyle(7,0,3);
+			yp=53;
+			outtextxy(xp,53,".");
+			xp+=10;
+			//
+			setcolor(11);
+			ellipse(335,355,0,360,40,20);
+			setfillstyle(1,7);
+			floodfill(335,355,11);
+			setcolor(9);
+			settextstyle(4,0,4);
+			outtextxy(333,325,".");
+			outtextxy(333,325,".");
+		}
+	       if(o.x.bx==1&&o.x.cx<235&&o.x.cx>155&&o.x.dx<325&&o.x.dx>285)
+	       {
+			// 1
+			sound(999);
+		       //	rectangle(155,285,235,325);
+			setcolor(15);
+			ellipse(195,305,0,360,40,20);
+			setfillstyle(1,9);
+			floodfill(195,305,15);
+			setcolor(4);
+			settextstyle(4,0,4);
+			outtextxy(188,283,"1");
+			outtextxy(188,283,"1");
+			delay(250);
+			nosound();
+			settextstyle(7,0,3);
+			yp=53;
+			outtextxy(xp,53,"1");
+			xp+=13;
+			//
+			setcolor(11);
+			ellipse(195,305,0,360,40,20);
+			setfillstyle(1,7);
+			floodfill(195,305,11);
+			setcolor(9);
+			settextstyle(4,0,4);
+			outtextxy(188,283,"1");
+			outtextxy(188,283,"1");
+	       }
+	       if(o.x.bx==1&&o.x.cx<325&&o.x.cx>245&&o.x.dx<326&&o.x.dx>285)
+	       {
+			// 2
+			sound(999);
+		       //	rectangle(245,285,325,326);
+			setcolor(15);
+			ellipse(285,305,0,360,40,20);
+			setfillstyle(1,9);
+			floodfill(285,305,15);
+			setcolor(4);
+			settextstyle(4,0,4);
+			outtextxy(280,283,"2");
+			outtextxy(280,283,"2");
+			delay(250);
+			nosound();
+			//xp=160;
+			yp=53;
+			settextstyle(7,0,3);
+			outtextxy(xp,53,"2");
+			xp+=13;
+			//
+		       setcolor(11);
+		       ellipse(285,305,0,360,40,20);
+		       setfillstyle(1,7);
+		       floodfill(285,305,11);
+		       setcolor(9);
+		       settextstyle(4,0,4);
+		       outtextxy(280,283,"2");
+		       outtextxy(280,283,"2");
+		}
+	       if(o.x.bx==1&&o.x.cx<415&&o.x.cx>335&&o.x.dx<326&&o.x.dx>285)
+	       {
+			// 3
+			sound(999);
+		       //	rectangle(335,285,415,326);
+			setcolor(15);
+			ellipse(375,305,0,360,40,20);
+			setfillstyle(1,9);
+			floodfill(375,305,15);
+			setcolor(4);
+			settextstyle(4,0,4);
+			outtextxy(367,283,"3");
+			outtextxy(367,283,"3");
+			delay(250);
+			nosound();
+			yp=53;
+			settextstyle(7,0,3);
+			outtextxy(xp,53,"3");
+			xp+=13;
+			//
+			  setcolor(11);
+			  ellipse(375,305,0,360,40,20);
+			  setfillstyle(1,7);
+			  floodfill(375,305,11);
+			  setcolor(9);
+			  settextstyle(4,0,4);
+			  outtextxy(367,283,"3");
+			  outtextxy(367,283,"3");
+	       }
+	       if(o.x.bx==1&&o.x.cx<235&&o.x.cx>155&&o.x.dx<270&&o.x.dx>230)
+	       {
+			// 4
+			sound(999);
+		      // rectangle(155,230,235,270);
+			setcolor(15);
+			ellipse(195,250,0,360,40,20);
+			setfillstyle(1,9);
+			floodfill(195,250,15);
+			setcolor(4);
+			settextstyle(4,0,4);
+			outtextxy(187,227,"4");
+			outtextxy(187,227,"4");
+			delay(250);
+			nosound();
+			yp=53;
+			settextstyle(7,0,3);
+			outtextxy(xp,53,"4");
+			xp+=13;
+			//
+			setcolor(11);
+			ellipse(195,250,0,360,40,20);
+			setfillstyle(1,7);
+			floodfill(195,250,11);
+			setcolor(9);
+			settextstyle(4,0,4);
+			outtextxy(187,227,"4");
+			outtextxy(187,227,"4");
+		}
+	       if(o.x.bx==1&&o.x.cx<325&&o.x.cx>245&&o.x.dx<270&&o.x.dx>230)
+	       {
+			// 5
+			sound(999);
+		      // rectangle(245,230,325,270);
+			setcolor(15);
+			ellipse(285,250,0,360,40,20);
+			setfillstyle(1,9);
+			floodfill(285,250,15);
+			setcolor(4);
+			settextstyle(4,0,4);
+			outtextxy(278,227,"5");
+			outtextxy(278,227,"5");
+			delay(250);
+			nosound();
+			yp=53;
+			settextstyle(7,0,3);
+			outtextxy(xp,53,"5");
+			xp+=13;
+			//
+			setcolor(11);
+			ellipse(285,250,0,360,40,20);
+			setfillstyle(1,7);
+			floodfill(285,250,11);
+			setcolor(9);
+			settextstyle(4,0,4);
+			outtextxy(278,227,"5");
+			outtextxy(278,227,"5");
+	       }
+	      if(o.x.bx==1&&o.x.cx<415&&o.x.cx>335&&o.x.dx<270&&o.x.dx>230)
+	       {
+			// 6
+			sound(999);
+		      // rectangle(335,230,415,270);
+			setcolor(15);
+			ellipse(375,250,0,360,40,20);
+			setfillstyle(1,9);
+			floodfill(375,250,15);
+			setcolor(4);
+			settextstyle(4,0,4);
+			outtextxy(368,227,"6");
+			outtextxy(368,227,"6");
+			delay(250);
+			nosound();
+			yp=53;
+			settextstyle(7,0,3);
+			outtextxy(xp,53,"6");
+			xp+=13;
+			//
+			setcolor(11);
+			ellipse(375,250,0,360,40,20);
+			setfillstyle(1,7);
+			floodfill(375,250,11);
+			setcolor(9);
+			settextstyle(4,0,4);
+			outtextxy(368,227,"6");
+			outtextxy(368,227,"6");
+	       }
+	       if(o.x.bx==1&&o.x.cx<235&&o.x.cx>155&&o.x.dx<215&&o.x.dx>175)
+	       {
+			// 7
+			sound(999);
+			// rectangle(155,175,235,215);
+			 setcolor(15);
+			ellipse(195,195,0,360,40,20);
+			setfillstyle(1,9);
+			floodfill(195,195,15);
+			setcolor(4);
+			settextstyle(4,0,4);
+			outtextxy(186,175,"7");
+			outtextxy(187,175,"7");
+			delay(250);
+			nosound();
+			yp=53;
+			settextstyle(7,0,3);
+			outtextxy(xp,53,"7");
+			xp+=13;
+			//
+			setcolor(11);
+			ellipse(195,195,0,360,40,20);
+			setfillstyle(1,7);
+			floodfill(195,195,11);
+			setcolor(9);
+			settextstyle(4,0,4);
+			outtextxy(186,175,"7");
+			outtextxy(187,175,"7");
+	      }
+	      if(o.x.bx==1&&o.x.cx<325&&o.x.cx>245&&o.x.dx<215&&o.x.dx>175)
+	       {
+			// 8
+			sound(999);
+		      //	 rectangle(245,175,325,215);
+			setcolor(15);
+			ellipse(285,195,0,360,40,20);
+			setfillstyle(1,9);
+			floodfill(285,195,15);
+			setcolor(4);
+			settextstyle(4,0,4);
+			outtextxy(275,175,"8");
+			outtextxy(275,175,"8");
+			delay(250);
+			nosound();
+			yp=53;
+			settextstyle(7,0,3);
+			outtextxy(xp,53,"8");
+			xp+=13;
+			//
+			setcolor(11);
+			ellipse(285,195,0,360,40,20);
+			setfillstyle(1,7);
+			floodfill(285,195,11);
+			setcolor(9);
+			settextstyle(4,0,4);
+			outtextxy(275,175,"8");
+			outtextxy(275,175,"8");
+	      }
+	       if(o.x.bx==1&&o.x.cx<415&&o.x.cx>335&&o.x.dx<215&&o.x.dx>175)
+	       {
+			// 9
+			sound(999);
+		      // rectangle(335,175,415,215);
+			setcolor(15);
+			ellipse(375,195,0,360,40,20);
+			setfillstyle(1,9);
+			floodfill(375,195,15);
+			setcolor(4);
+			settextstyle(4,0,4);
+			outtextxy(366,175,"9");
+			outtextxy(366,175,"9");
+			delay(250);
+			nosound();
+			yp=53;
+			settextstyle(7,0,3);
+			outtextxy(xp,yp,"9");
+			xp+=13;
+			//
+			setcolor(11);
+			ellipse(375,195,0,360,40,20);
+			setfillstyle(1,7);
+			floodfill(375,195,11);
+			setcolor(9);
+			settextstyle(4,0,4);
+			outtextxy(366,175,"9");
+			outtextxy(366,175,"9");
+	      }
+	}
+}
+void exit_screen()
+{
+	cleardevice();
+	setcolor(15);
+	setlinestyle(0,0,2);
+	rectangle(109,94,531,306);
+	setfillstyle(1,5);
+	bar(110,95,530,305);
+	rectangle(115,100,525,299);
+	//
+	setfillstyle(1,4);
+	bar(116,102,524,298);
+	settextstyle(1,0,3);
+	setcolor(14);
+	outtextxy(224,100,"Thanks For Using...");
+	outtextxy(225,100,"Thanks For Using...");
+	setcolor(15);
+	line(115,137,525,137);
+	setcolor(2);
+	setlinestyle(0,1,2);
+	setcolor(15);
+	settextstyle(1,0,1);
+	outtextxy(120,142,"Design & Developed By :-");
+	setfillstyle(1,10);
+	bar(116,170,524,203);
+	settextstyle(1,0,4);
+	setcolor(1);
+	outtextxy(185,165," DEEPAK SINGH ");
+	setcolor(1);
+	outtextxy(185,166," DEEPAK SINGH ");
+	outtextxy(185,167," DEEPAK SINGH ");
+	setcolor(1);
+	outtextxy(185,168," DEEPAK SINGH ");
+
+	setcolor(15);
+	settextstyle(7,0,3);
+	outtextxy(120,202,"Contact for more...");
+	line(117,230,335,230);
+
+	setcolor(10);
+	settextstyle(1,0,2);
+	outtextxy(118,237,"Phone :- 9525357044");
+	settextstyle(1,0,2);
+	outtextxy(118,260,"Email :- deepsinghkumar01@gmail.com");
+	setcolor(14);
+	line(170,330,460,330);
+	setcolor(15);
+	settextstyle(1,0,2);
+	outtextxy(210,330,"Exiting please wait !...");
+	setcolor(14);
+	line(170,360,460,360);
+	setcolor(15);
+	settextstyle(1,0,2);
+	outtextxy(265,370,"-d..$!ng#");
+	delay(5000);
+	sound(9999);
+	cleardevice();
+	delay(30);
+	nosound();
+	cleardevice();
+	exit(0);
+}
